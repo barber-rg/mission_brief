@@ -68,12 +68,24 @@
         <!-- Header -->
         <div class="text-center mb-4 no-print">
             <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Mission Brief Generator</h1>
-            <p class="text-gray-600 mt-2">Fill out the fields, save your progress, and print the final brief.</p>
+            <p class="text-gray-600 mt-2">Upload an SOW to pre-fill the form, or fill it out manually.</p>
+        </div>
+
+        <!-- New SOW Upload Section -->
+        <div class="bg-white rounded-xl shadow-lg p-4 mb-8 no-print">
+            <h3 class="font-semibold text-lg text-gray-800 mb-3">Automate with AI</h3>
+            <div class="flex flex-wrap items-center gap-4">
+                <input type="file" id="sow-uploader" class="flex-grow p-2 border border-gray-300 rounded-md" accept=".pdf,.docx">
+                <button onclick="processSOW()" class="bg-purple-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-purple-700">Analyze SOW & Pre-fill Form</button>
+            </div>
+            <div id="loading-indicator" class="hidden mt-4 text-center">
+                <p class="text-gray-600">Analyzing document, please wait...</p>
+            </div>
         </div>
 
         <!-- Load Project Section -->
         <div class="bg-white rounded-xl shadow-lg p-4 mb-8 flex flex-wrap items-center gap-4 no-print">
-            <label for="project-loader-dropdown" class="font-medium text-gray-700 whitespace-nowrap">Load Existing Project:</label>
+            <label for="project-loader-dropdown" class="font-medium text-gray-700 whitespace-nowrap">Load Saved Project:</label>
             <select id="project-loader-dropdown" onchange="loadSelectedProject(this.value)" class="flex-grow p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
                 <option value="">-- Select a Project --</option>
             </select>
@@ -305,6 +317,47 @@
             list.appendChild(itemDiv);
         }
 
+        // --- SOW Processing ---
+        function processSOW() {
+            const uploader = document.getElementById('sow-uploader');
+            const loadingIndicator = document.getElementById('loading-indicator');
+
+            if (uploader.files.length === 0) {
+                alert('Please select a file to analyze.');
+                return;
+            }
+            
+            loadingIndicator.classList.remove('hidden');
+
+            // ** THIS IS A PLACEHOLDER **
+            // In a real application, you would send the file to your backend server here.
+            // The server would process it with the Gemini API and send back structured data.
+            setTimeout(() => {
+                // Simulate receiving data from the backend
+                const dummyData = {
+                    version: 1,
+                    projectName: 'AI-Extracted Project Name',
+                    clientName: 'AI-Extracted Client Name',
+                    date: new Date().toISOString().split('T')[0],
+                    projectStatus: 'Draft',
+                    missionObjective: 'This is the mission objective extracted by the AI.',
+                    background: 'This is the background and situation extracted by the AI.',
+                    inScope: '<ul><li>In-scope item 1 from SOW</li><li>In-scope item 2 from SOW</li></ul>',
+                    outOfScope: '<ul><li>Out-of-scope item 1 from SOW</li></ul>',
+                    repoLink: '',
+                    deliverables: ['Deliverable A from SOW', 'Deliverable B from SOW'],
+                    team: [{role: 'Extracted Role', name: 'Extracted Name'}],
+                    milestones: [{name: 'Extracted Milestone', start: '', end: ''}],
+                    metrics: ['Metric A from SOW']
+                };
+
+                populateForm(dummyData);
+                loadingIndicator.classList.add('hidden');
+                alert('SOW analysis complete! The form has been pre-filled.');
+
+            }, 3000); // Simulate a 3-second processing time
+        }
+
         // --- Save/Load Progress Functions ---
         function getFormData() {
             const data = {
@@ -505,11 +558,10 @@
             addMilestone('Phase 3: Implementation & Testing');
             populateProjectDropdown();
             
-            // Add event listeners to save selection on user interaction
             document.querySelectorAll('.editor').forEach(editor => {
+                editor.addEventListener('focusout', () => saveSelection(editor));
+                editor.addEventListener('click', () => saveSelection(editor));
                 editor.addEventListener('keyup', () => saveSelection(editor));
-                editor.addEventListener('mouseup', () => saveSelection(editor));
-                editor.addEventListener('focus', () => saveSelection(editor));
             });
         });
     </script>
