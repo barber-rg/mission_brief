@@ -14,6 +14,10 @@
         .no-export {
             /* This class is used to hide elements in the final PDF */
         }
+        /* Styles specifically for PDF generation to improve page breaks */
+        .pdf-section {
+            page-break-inside: avoid;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -64,19 +68,19 @@
                 <!-- Section Template -->
                 <div class="space-y-8">
                     <!-- 1. Mission Objective -->
-                    <section>
+                    <section class="pdf-section">
                         <h3 class="text-xl font-semibold text-gray-800 mb-3 border-b pb-2">1. Mission Objective</h3>
                         <textarea id="mission-objective" rows="3" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="State the single, most important goal of this engagement..."></textarea>
                     </section>
 
                     <!-- 2. Background & Situation -->
-                    <section>
+                    <section class="pdf-section">
                         <h3 class="text-xl font-semibold text-gray-800 mb-3 border-b pb-2">2. Background & Situation</h3>
                         <textarea id="background" rows="4" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Briefly describe the context, the core problem, or the opportunity..."></textarea>
                     </section>
 
                     <!-- 3. Key Deliverables -->
-                    <section>
+                    <section class="pdf-section">
                         <div class="flex justify-between items-center mb-3 border-b pb-2">
                             <h3 class="text-xl font-semibold text-gray-800">3. Key Deliverables</h3>
                             <button type="button" onclick="addItem('deliverables-list')" class="no-export bg-blue-100 text-blue-700 text-sm font-medium px-3 py-1 rounded-md hover:bg-blue-200 transition-colors">Add Item</button>
@@ -87,7 +91,7 @@
                     </section>
 
                     <!-- 4. Scope of Work -->
-                    <section>
+                    <section class="pdf-section">
                         <h3 class="text-xl font-semibold text-gray-800 mb-3 border-b pb-2">4. Scope of Work</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
@@ -102,7 +106,7 @@
                     </section>
 
                     <!-- 5. Team & Roles -->
-                    <section>
+                    <section class="pdf-section">
                         <div class="flex justify-between items-center mb-3 border-b pb-2">
                             <h3 class="text-xl font-semibold text-gray-800">5. Team & Roles</h3>
                             <button type="button" onclick="addItem('team-list', true)" class="no-export bg-blue-100 text-blue-700 text-sm font-medium px-3 py-1 rounded-md hover:bg-blue-200 transition-colors">Add Role</button>
@@ -113,7 +117,7 @@
                     </section>
 
                     <!-- 6. Project Resources & Data Management -->
-                    <section>
+                    <section class="pdf-section">
                         <h3 class="text-xl font-semibold text-gray-800 mb-3 border-b pb-2">6. Project Resources & Data Management</h3>
                         <label for="repo-link" class="block text-sm font-medium text-gray-700 mb-1">Central Repository Link</label>
                         <input type="url" id="repo-link" class="w-full p-2 border border-gray-300 rounded-md" placeholder="https://drive.google.com/...">
@@ -121,7 +125,7 @@
                     </section>
                     
                     <!-- 7. High-Level Timeline & Milestones -->
-                    <section>
+                    <section class="pdf-section">
                         <div class="flex justify-between items-center mb-3 border-b pb-2">
                             <h3 class="text-xl font-semibold text-gray-800">7. High-Level Timeline & Milestones</h3>
                             <button type="button" onclick="addMilestone()" class="no-export bg-blue-100 text-blue-700 text-sm font-medium px-3 py-1 rounded-md hover:bg-blue-200 transition-colors">Add Milestone</button>
@@ -132,7 +136,7 @@
                     </section>
 
                     <!-- 8. Success Metrics -->
-                    <section>
+                    <section class="pdf-section">
                         <div class="flex justify-between items-center mb-3 border-b pb-2">
                              <h3 class="text-xl font-semibold text-gray-800">8. Success Metrics</h3>
                              <button type="button" onclick="addItem('metrics-list')" class="no-export bg-blue-100 text-blue-700 text-sm font-medium px-3 py-1 rounded-md hover:bg-blue-200 transition-colors">Add Metric</button>
@@ -356,7 +360,8 @@
               filename:     filename,
               image:        { type: 'jpeg', quality: 0.98 },
               html2canvas:  { scale: 2, useCORS: true },
-              jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+              jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
+              pagebreak:    { mode: ['css', 'avoid-all'] } // Use CSS rules and avoid breaking elements
             };
 
             html2pdf().from(element).set(opt).save().then(() => {
@@ -377,4 +382,3 @@
 
 </body>
 </html>
-
