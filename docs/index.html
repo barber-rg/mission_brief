@@ -21,8 +21,8 @@
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
-            /* Hide all interactive and non-essential elements when printing */
-            .no-print, input, textarea, select, button {
+            /* Hide the entire form and interactive elements when printing */
+            .no-print {
                 display: none !important;
             }
             
@@ -47,6 +47,13 @@
             }
             h3 {
                 border-bottom: 2px solid #e5e7eb;
+                padding-bottom: 0.5rem;
+                font-size: 1.25rem;
+            }
+            h4 {
+                font-size: 1rem;
+                font-weight: 600;
+                margin-bottom: 0.25rem;
             }
             .print-text {
                 white-space: pre-wrap; /* Preserve line breaks from textareas */
@@ -55,13 +62,13 @@
             }
             .print-list {
                 list-style-type: disc;
-                padding-left: 2rem;
+                padding-left: 1.5rem;
                 padding-top: 0.5rem;
             }
              .print-grid {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                gap: 1.5rem;
+                gap: 2rem;
             }
         }
     </style>
@@ -90,7 +97,7 @@
         <div id="brief-form" class="bg-white rounded-xl shadow-lg p-6 sm:p-8">
             <header class="flex justify-between items-center border-b pb-4 mb-6">
                 <h2 class="text-2xl font-bold text-blue-700">Mission Brief</h2>
-                <span class="text-sm font-medium text-gray-500">Version: <span id="version-display">1</span></span>
+                <span class="text-sm font-medium text-gray-500 no-print">Version: <span id="version-display">1</span></span>
             </header>
             <input type="hidden" id="version-counter" value="1">
 
@@ -98,19 +105,34 @@
                 <!-- Project Details Section -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div>
-                        <label for="project-name" class="block text-sm font-medium text-gray-700 mb-1">Project Name</label>
-                        <input type="text" id="project-name" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Enter project name...">
-                        <div id="print-project-name" class="print-only print-text"></div>
+                        <div class="no-print">
+                            <label for="project-name" class="block text-sm font-medium text-gray-700 mb-1">Project Name</label>
+                            <input type="text" id="project-name" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Enter project name...">
+                        </div>
+                        <div class="print-only">
+                            <h4>Project Name</h4>
+                            <p id="print-project-name"></p>
+                        </div>
                     </div>
                     <div>
-                        <label for="client-name" class="block text-sm font-medium text-gray-700 mb-1">Client</label>
-                        <input type="text" id="client-name" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Enter client name...">
-                        <div id="print-client-name" class="print-only print-text"></div>
+                        <div class="no-print">
+                            <label for="client-name" class="block text-sm font-medium text-gray-700 mb-1">Client</label>
+                            <input type="text" id="client-name" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Enter client name...">
+                        </div>
+                        <div class="print-only">
+                            <h4>Client</h4>
+                            <p id="print-client-name"></p>
+                        </div>
                     </div>
                     <div>
-                        <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                        <input type="date" id="date" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                        <div id="print-date" class="print-only print-text"></div>
+                        <div class="no-print">
+                            <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                            <input type="date" id="date" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                         <div class="print-only">
+                            <h4>Date</h4>
+                            <p id="print-date"></p>
+                        </div>
                     </div>
                 </div>
 
@@ -119,15 +141,19 @@
                     <!-- 1. Mission Objective -->
                     <section>
                         <h3 class="text-xl font-semibold text-gray-800 mb-3 border-b pb-2">1. Mission Objective</h3>
-                        <textarea id="mission-objective" rows="3" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="State the single, most important goal of this engagement..."></textarea>
-                        <div id="print-mission-objective" class="print-only print-text"></div>
+                        <div class="no-print">
+                            <textarea id="mission-objective" rows="3" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="State the single, most important goal of this engagement..."></textarea>
+                        </div>
+                        <p id="print-mission-objective" class="print-only print-text"></p>
                     </section>
 
                     <!-- 2. Background & Situation -->
                     <section>
                         <h3 class="text-xl font-semibold text-gray-800 mb-3 border-b pb-2">2. Background & Situation</h3>
-                        <textarea id="background" rows="4" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Briefly describe the context, the core problem, or the opportunity..."></textarea>
-                        <div id="print-background" class="print-only print-text"></div>
+                        <div class="no-print">
+                            <textarea id="background" rows="4" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Briefly describe the context, the core problem, or the opportunity..."></textarea>
+                        </div>
+                        <p id="print-background" class="print-only print-text"></p>
                     </section>
 
                     <!-- 3. Key Deliverables -->
@@ -136,7 +162,7 @@
                             <h3 class="text-xl font-semibold text-gray-800">3. Key Deliverables</h3>
                             <button type="button" onclick="addItem('deliverables-list')" class="no-print bg-blue-100 text-blue-700 text-sm font-medium px-3 py-1 rounded-md hover:bg-blue-200 transition-colors">Add Item</button>
                         </div>
-                        <div id="deliverables-list" class="space-y-2">
+                        <div id="deliverables-list" class="space-y-2 no-print">
                             <div class="flex items-center gap-2"><input type="text" class="w-full p-2 border border-gray-300 rounded-md" placeholder="e.g., Comprehensive market analysis report"><button type="button" onclick="this.parentElement.remove()" class="no-print remove-button bg-red-100 text-red-700 p-2 rounded-md hover:bg-red-200">X</button></div>
                         </div>
                         <ul id="print-deliverables-list" class="print-only print-list"></ul>
@@ -145,7 +171,7 @@
                     <!-- 4. Scope of Work -->
                     <section>
                         <h3 class="text-xl font-semibold text-gray-800 mb-3 border-b pb-2">4. Scope of Work</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 no-print">
                             <div>
                                 <h4 class="font-medium text-gray-700 mb-2">In Scope</h4>
                                 <textarea id="in-scope" rows="5" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Clearly define what activities and tasks are included..."></textarea>
@@ -156,8 +182,8 @@
                             </div>
                         </div>
                         <div class="print-only print-grid">
-                             <div><h4 class="font-medium text-gray-700 mb-2">In Scope</h4><div id="print-in-scope" class="print-text"></div></div>
-                             <div><h4 class="font-medium text-gray-700 mb-2">Out of Scope</h4><div id="print-out-of-scope" class="print-text"></div></div>
+                             <div><h4>In Scope</h4><p id="print-in-scope" class="print-text"></p></div>
+                             <div><h4>Out of Scope</h4><p id="print-out-of-scope" class="print-text"></p></div>
                         </div>
                     </section>
 
@@ -167,7 +193,7 @@
                             <h3 class="text-xl font-semibold text-gray-800">5. Team & Roles</h3>
                             <button type="button" onclick="addItem('team-list', true)" class="no-print bg-blue-100 text-blue-700 text-sm font-medium px-3 py-1 rounded-md hover:bg-blue-200 transition-colors">Add Role</button>
                         </div>
-                        <div id="team-list" class="space-y-3">
+                        <div id="team-list" class="space-y-3 no-print">
                             <div class="flex items-center gap-2"><input type="text" class="w-1/3 p-2 border border-gray-300 rounded-md" placeholder="Role (e.g., Project Lead)"><input type="text" class="w-2/3 p-2 border border-gray-300 rounded-md" placeholder="Name"><button type="button" onclick="this.parentElement.remove()" class="no-print remove-button bg-red-100 text-red-700 p-2 rounded-md hover:bg-red-200">X</button></div>
                         </div>
                         <ul id="print-team-list" class="print-only print-list"></ul>
@@ -176,10 +202,12 @@
                     <!-- 6. Project Resources & Data Management -->
                     <section>
                         <h3 class="text-xl font-semibold text-gray-800 mb-3 border-b pb-2">6. Project Resources & Data Management</h3>
-                        <label for="repo-link" class="block text-sm font-medium text-gray-700 mb-1">Central Repository Link</label>
-                        <input type="url" id="repo-link" class="w-full p-2 border border-gray-300 rounded-md" placeholder="https://drive.google.com/...">
-                        <p class="text-xs text-gray-500 mt-2 no-print">Data from the Ripple Group drive should be migrated to this central project folder upon kickoff.</p>
-                        <div id="print-repo-link" class="print-only print-text"></div>
+                        <div class="no-print">
+                            <label for="repo-link" class="block text-sm font-medium text-gray-700 mb-1">Central Repository Link</label>
+                            <input type="url" id="repo-link" class="w-full p-2 border border-gray-300 rounded-md" placeholder="https://drive.google.com/...">
+                            <p class="text-xs text-gray-500 mt-2">Data from the Ripple Group drive should be migrated to this central project folder upon kickoff.</p>
+                        </div>
+                        <p id="print-repo-link" class="print-only print-text"></p>
                     </section>
                     
                     <!-- 7. High-Level Timeline & Milestones -->
@@ -188,7 +216,7 @@
                             <h3 class="text-xl font-semibold text-gray-800">7. High-Level Timeline & Milestones</h3>
                             <button type="button" onclick="addMilestone()" class="no-print bg-blue-100 text-blue-700 text-sm font-medium px-3 py-1 rounded-md hover:bg-blue-200 transition-colors">Add Milestone</button>
                         </div>
-                        <div id="milestones-list" class="space-y-4">
+                        <div id="milestones-list" class="space-y-4 no-print">
                             <!-- Milestones will be dynamically added here -->
                         </div>
                         <ul id="print-milestones-list" class="print-only print-list"></ul>
@@ -200,7 +228,7 @@
                              <h3 class="text-xl font-semibold text-gray-800">8. Success Metrics</h3>
                              <button type="button" onclick="addItem('metrics-list')" class="no-print bg-blue-100 text-blue-700 text-sm font-medium px-3 py-1 rounded-md hover:bg-blue-200 transition-colors">Add Metric</button>
                         </div>
-                        <div id="metrics-list" class="space-y-2">
+                        <div id="metrics-list" class="space-y-2 no-print">
                            <div class="flex items-center gap-2"><input type="text" class="w-full p-2 border border-gray-300 rounded-md" placeholder="e.g., 25% increase in qualified leads"><button type="button" onclick="this.parentElement.remove()" class="no-print remove-button bg-red-100 text-red-700 p-2 rounded-md hover:bg-red-200">X</button></div>
                         </div>
                         <ul id="print-metrics-list" class="print-only print-list"></ul>
