@@ -134,7 +134,7 @@
                     <section>
                         <h3 class="text-xl font-semibold text-gray-800 mb-3 border-b pb-2">1. Mission Objective</h3>
                         <div class="no-print">
-                            <div class="editor-toolbar mb-2 space-x-2"><button type="button" onmousedown="event.preventDefault(); formatDoc('bold')">B</button><button type="button" onmousedown="event.preventDefault(); formatDoc('italic')">I</button><button type="button" onmousedown="event.preventDefault(); formatDoc('insertUnorderedList')">List</button></div>
+                            <div class="editor-toolbar mb-2 space-x-2"><button type="button" onmousedown="event.preventDefault(); formatDoc('bold', 'mission-objective')">B</button><button type="button" onmousedown="event.preventDefault(); formatDoc('italic', 'mission-objective')">I</button><button type="button" onmousedown="event.preventDefault(); formatDoc('insertUnorderedList', 'mission-objective')">List</button></div>
                             <div id="mission-objective" class="editor" contenteditable="true"></div>
                         </div>
                         <div id="print-mission-objective" class="print-only print-text"></div>
@@ -144,7 +144,7 @@
                     <section>
                         <h3 class="text-xl font-semibold text-gray-800 mb-3 border-b pb-2">2. Background & Situation</h3>
                         <div class="no-print">
-                           <div class="editor-toolbar mb-2 space-x-2"><button type="button" onmousedown="event.preventDefault(); formatDoc('bold')">B</button><button type="button" onmousedown="event.preventDefault(); formatDoc('italic')">I</button><button type="button" onmousedown="event.preventDefault(); formatDoc('insertUnorderedList')">List</button></div>
+                           <div class="editor-toolbar mb-2 space-x-2"><button type="button" onmousedown="event.preventDefault(); formatDoc('bold', 'background')">B</button><button type="button" onmousedown="event.preventDefault(); formatDoc('italic', 'background')">I</button><button type="button" onmousedown="event.preventDefault(); formatDoc('insertUnorderedList', 'background')">List</button></div>
                            <div id="background" class="editor" contenteditable="true"></div>
                         </div>
                         <div id="print-background" class="print-only print-text"></div>
@@ -168,12 +168,12 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 no-print">
                             <div>
                                 <h4 class="font-medium text-gray-700 mb-2">In Scope</h4>
-                                <div class="editor-toolbar mb-2 space-x-2"><button type="button" onmousedown="event.preventDefault(); formatDoc('bold')">B</button><button type="button" onmousedown="event.preventDefault(); formatDoc('italic')">I</button><button type="button" onmousedown="event.preventDefault(); formatDoc('insertUnorderedList')">List</button></div>
+                                <div class="editor-toolbar mb-2 space-x-2"><button type="button" onmousedown="event.preventDefault(); formatDoc('bold', 'in-scope')">B</button><button type="button" onmousedown="event.preventDefault(); formatDoc('italic', 'in-scope')">I</button><button type="button" onmousedown="event.preventDefault(); formatDoc('insertUnorderedList', 'in-scope')">List</button></div>
                                 <div id="in-scope" class="editor" contenteditable="true"></div>
                             </div>
                             <div>
                                 <h4 class="font-medium text-gray-700 mb-2">Out of Scope</h4>
-                                <div class="editor-toolbar mb-2 space-x-2"><button type="button" onmousedown="event.preventDefault(); formatDoc('bold')">B</button><button type="button" onmousedown="event.preventDefault(); formatDoc('italic')">I</button><button type="button" onmousedown="event.preventDefault(); formatDoc('insertUnorderedList')">List</button></div>
+                                <div class="editor-toolbar mb-2 space-x-2"><button type="button" onmousedown="event.preventDefault(); formatDoc('bold', 'out-of-scope')">B</button><button type="button" onmousedown="event.preventDefault(); formatDoc('italic', 'out-of-scope')">I</button><button type="button" onmousedown="event.preventDefault(); formatDoc('insertUnorderedList', 'out-of-scope')">List</button></div>
                                 <div id="out-of-scope" class="editor" contenteditable="true"></div>
                             </div>
                         </div>
@@ -246,27 +246,30 @@
 
     <script>
         const PROJECT_DB_PREFIX = 'mission-brief-';
-        let savedRange = null;
+        let lastSelection = {};
 
         // --- Rich Text Editor Functions ---
-        document.onselectionchange = () => {
+        function saveSelection(containerEl) {
             const selection = window.getSelection();
             if (selection.rangeCount > 0) {
-                let parent = selection.getRangeAt(0).commonAncestorContainer;
-                parent = parent.nodeType === 1 ? parent : parent.parentNode;
-                if (parent.closest('.editor')) {
-                    savedRange = selection.getRangeAt(0);
-                }
+                lastSelection[containerEl.id] = selection.getRangeAt(0);
             }
-        };
+        }
 
-        function formatDoc(command, value = null) {
+        function restoreSelection(containerEl) {
+            const selection = window.getSelection();
+            const savedRange = lastSelection[containerEl.id];
             if (savedRange) {
-                const selection = window.getSelection();
                 selection.removeAllRanges();
                 selection.addRange(savedRange);
-                document.execCommand(command, false, value);
             }
+        }
+        
+        function formatDoc(command, editorId) {
+            const editor = document.getElementById(editorId);
+            editor.focus();
+            restoreSelection(editor);
+            document.execCommand(command, false, null);
         }
 
         // --- Dynamic Item Functions ---
@@ -501,6 +504,13 @@
             addMilestone('Phase 2: Strategy & Development');
             addMilestone('Phase 3: Implementation & Testing');
             populateProjectDropdown();
+            
+            // Add event listeners to save selection on user interaction
+            document.querySelectorAll('.editor').forEach(editor => {
+                editor.addEventListener('keyup', () => saveSelection(editor));
+                editor.addEventListener('mouseup', () => saveSelection(editor));
+                editor.addEventListener('focus', () => saveSelection(editor));
+            });
         });
     </script>
 
