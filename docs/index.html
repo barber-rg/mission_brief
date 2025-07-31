@@ -10,20 +10,58 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+
+        /* Hide the printable content by default */
+        .print-only {
+            display: none;
+        }
+
         @media print {
             body {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
-            .no-print {
-                display: none;
+            /* Hide all interactive and non-essential elements when printing */
+            .no-print, input, textarea, select, button {
+                display: none !important;
             }
-            #app-container > div:not(#brief-form) {
-                display: none;
+            
+            /* Show the specially prepared print content */
+            .print-only {
+                display: block !important;
+                color: #000; /* Ensure text is black for printing */
+            }
+
+            /* General print styling for a clean document look */
+            #app-container {
+                padding: 0;
+                margin: 0;
             }
             #brief-form {
                 box-shadow: none;
                 border: none;
+                padding: 0;
+            }
+            section {
+                page-break-inside: avoid;
+            }
+            h3 {
+                border-bottom: 2px solid #e5e7eb;
+            }
+            .print-text {
+                white-space: pre-wrap; /* Preserve line breaks from textareas */
+                word-wrap: break-word;
+                padding-top: 0.5rem;
+            }
+            .print-list {
+                list-style-type: disc;
+                padding-left: 2rem;
+                padding-top: 0.5rem;
+            }
+             .print-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
             }
         }
     </style>
@@ -62,14 +100,17 @@
                     <div>
                         <label for="project-name" class="block text-sm font-medium text-gray-700 mb-1">Project Name</label>
                         <input type="text" id="project-name" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Enter project name...">
+                        <div id="print-project-name" class="print-only print-text"></div>
                     </div>
                     <div>
                         <label for="client-name" class="block text-sm font-medium text-gray-700 mb-1">Client</label>
                         <input type="text" id="client-name" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Enter client name...">
+                        <div id="print-client-name" class="print-only print-text"></div>
                     </div>
                     <div>
                         <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
                         <input type="date" id="date" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <div id="print-date" class="print-only print-text"></div>
                     </div>
                 </div>
 
@@ -79,12 +120,14 @@
                     <section>
                         <h3 class="text-xl font-semibold text-gray-800 mb-3 border-b pb-2">1. Mission Objective</h3>
                         <textarea id="mission-objective" rows="3" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="State the single, most important goal of this engagement..."></textarea>
+                        <div id="print-mission-objective" class="print-only print-text"></div>
                     </section>
 
                     <!-- 2. Background & Situation -->
                     <section>
                         <h3 class="text-xl font-semibold text-gray-800 mb-3 border-b pb-2">2. Background & Situation</h3>
                         <textarea id="background" rows="4" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Briefly describe the context, the core problem, or the opportunity..."></textarea>
+                        <div id="print-background" class="print-only print-text"></div>
                     </section>
 
                     <!-- 3. Key Deliverables -->
@@ -96,6 +139,7 @@
                         <div id="deliverables-list" class="space-y-2">
                             <div class="flex items-center gap-2"><input type="text" class="w-full p-2 border border-gray-300 rounded-md" placeholder="e.g., Comprehensive market analysis report"><button type="button" onclick="this.parentElement.remove()" class="no-print remove-button bg-red-100 text-red-700 p-2 rounded-md hover:bg-red-200">X</button></div>
                         </div>
+                        <ul id="print-deliverables-list" class="print-only print-list"></ul>
                     </section>
 
                     <!-- 4. Scope of Work -->
@@ -111,6 +155,10 @@
                                 <textarea id="out-of-scope" rows="5" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Explicitly state what is not included..."></textarea>
                             </div>
                         </div>
+                        <div class="print-only print-grid">
+                             <div><h4 class="font-medium text-gray-700 mb-2">In Scope</h4><div id="print-in-scope" class="print-text"></div></div>
+                             <div><h4 class="font-medium text-gray-700 mb-2">Out of Scope</h4><div id="print-out-of-scope" class="print-text"></div></div>
+                        </div>
                     </section>
 
                     <!-- 5. Team & Roles -->
@@ -122,6 +170,7 @@
                         <div id="team-list" class="space-y-3">
                             <div class="flex items-center gap-2"><input type="text" class="w-1/3 p-2 border border-gray-300 rounded-md" placeholder="Role (e.g., Project Lead)"><input type="text" class="w-2/3 p-2 border border-gray-300 rounded-md" placeholder="Name"><button type="button" onclick="this.parentElement.remove()" class="no-print remove-button bg-red-100 text-red-700 p-2 rounded-md hover:bg-red-200">X</button></div>
                         </div>
+                        <ul id="print-team-list" class="print-only print-list"></ul>
                     </section>
 
                     <!-- 6. Project Resources & Data Management -->
@@ -129,7 +178,8 @@
                         <h3 class="text-xl font-semibold text-gray-800 mb-3 border-b pb-2">6. Project Resources & Data Management</h3>
                         <label for="repo-link" class="block text-sm font-medium text-gray-700 mb-1">Central Repository Link</label>
                         <input type="url" id="repo-link" class="w-full p-2 border border-gray-300 rounded-md" placeholder="https://drive.google.com/...">
-                        <p class="text-xs text-gray-500 mt-2">Data from the Ripple Group drive should be migrated to this central project folder upon kickoff.</p>
+                        <p class="text-xs text-gray-500 mt-2 no-print">Data from the Ripple Group drive should be migrated to this central project folder upon kickoff.</p>
+                        <div id="print-repo-link" class="print-only print-text"></div>
                     </section>
                     
                     <!-- 7. High-Level Timeline & Milestones -->
@@ -141,6 +191,7 @@
                         <div id="milestones-list" class="space-y-4">
                             <!-- Milestones will be dynamically added here -->
                         </div>
+                        <ul id="print-milestones-list" class="print-only print-list"></ul>
                     </section>
 
                     <!-- 8. Success Metrics -->
@@ -152,6 +203,7 @@
                         <div id="metrics-list" class="space-y-2">
                            <div class="flex items-center gap-2"><input type="text" class="w-full p-2 border border-gray-300 rounded-md" placeholder="e.g., 25% increase in qualified leads"><button type="button" onclick="this.parentElement.remove()" class="no-print remove-button bg-red-100 text-red-700 p-2 rounded-md hover:bg-red-200">X</button></div>
                         </div>
+                        <ul id="print-metrics-list" class="print-only print-list"></ul>
                     </section>
                 </div>
             </form>
@@ -325,7 +377,7 @@
             clearAndFill('milestones-list', data.milestones, (item) => addMilestone(item.name, item.start, item.end));
         }
 
-        // --- New Dropdown Functions ---
+        // --- Dropdown Functions ---
         function populateProjectDropdown() {
             const dropdown = document.getElementById('project-loader-dropdown');
             const projects = Object.keys(localStorage)
@@ -352,6 +404,56 @@
             const data = JSON.parse(localStorage.getItem(PROJECT_DB_PREFIX + projectName));
             populateForm(data);
         }
+
+        // --- Print Preparation ---
+        function prepareForPrint() {
+            // Simple text fields
+            document.getElementById('print-project-name').textContent = document.getElementById('project-name').value;
+            document.getElementById('print-client-name').textContent = document.getElementById('client-name').value;
+            document.getElementById('print-date').textContent = document.getElementById('date').value;
+            document.getElementById('print-mission-objective').textContent = document.getElementById('mission-objective').value;
+            document.getElementById('print-background').textContent = document.getElementById('background').value;
+            document.getElementById('print-in-scope').textContent = document.getElementById('in-scope').value;
+            document.getElementById('print-out-of-scope').textContent = document.getElementById('out-of-scope').value;
+            document.getElementById('print-repo-link').textContent = document.getElementById('repo-link').value;
+
+            // Dynamic lists
+            const createPrintList = (sourceListId, targetListId, formatter) => {
+                const sourceList = document.getElementById(sourceListId);
+                const targetList = document.getElementById(targetListId);
+                targetList.innerHTML = '';
+                const items = sourceList.querySelectorAll('input[type="text"]');
+                if (formatter) {
+                     const itemDivs = sourceList.querySelectorAll('.flex, .milestone-item');
+                     itemDivs.forEach(div => {
+                        const li = document.createElement('li');
+                        li.textContent = formatter(div.querySelectorAll('input'));
+                        targetList.appendChild(li);
+                     });
+                } else {
+                    items.forEach(item => {
+                        if (item.value) {
+                            const li = document.createElement('li');
+                            li.textContent = item.value;
+                            targetList.appendChild(li);
+                        }
+                    });
+                }
+            };
+
+            createPrintList('deliverables-list', 'print-deliverables-list');
+            createPrintList('metrics-list', 'print-metrics-list');
+            createPrintList('team-list', 'print-team-list', (inputs) => `${inputs[0].value}: ${inputs[1].value}`);
+            createPrintList('milestones-list', 'print-milestones-list', (inputs) => {
+                let text = inputs[0].value;
+                if (inputs[1].value || inputs[2].value) {
+                    text += ` (${inputs[1].value || 'N/A'} - ${inputs[2].value || 'N/A'})`;
+                }
+                return text;
+            });
+        }
+
+        window.onbeforeprint = prepareForPrint;
         
         // --- Initialization ---
         document.addEventListener('DOMContentLoaded', function() {
